@@ -69,7 +69,7 @@ def create_table_body(table_content:list) -> str:
         result += "</tr>\n"
     return result
     
-
+    
 def writeToHtml(file:str, html_content:str) -> None:
     """
     Writes to a html file
@@ -82,6 +82,49 @@ def writeToHtml(file:str, html_content:str) -> None:
         htmlFile.write(html_content)
 
 
+def validateFileExistence(file:str) -> None:
+    if not os.path.exists(file):
+        raise FileNotFoundError(f"{file} was not found.")
+
+
+def validateFileExt(file: str, expected_extension: str) -> None:
+    _, actual_extension = os.path.splitext(file)
+    if actual_extension != expected_extension:
+        raise ValueError(f"ExtensionError: File should have the extension {expected_extension}.")
+
+
+def handle_command_line_args() -> tuple[str, str]:
+    """
+    Handles command-line arguments.
+
+    Returns:
+        tuple[str, str]: A tuple containing the CSV file path and HTML file path.
+
+    Raises:
+        NameError: If there is an issue with command-line arguments.
+        RuntimeError: If there is an issue with file existence or extension validation.
+    """
+    usage = "Usage: python3 main.py <CSV_FILE> <HTML_FILE>"
+
+    try:
+        csv_file = sys.argv[1]
+        html_file = sys.argv[2]
+
+        if len(sys.argv) != 3:
+            raise UsageError(usage)
+
+        validateFileExistence(csv_file)
+        validateFileExt(csv_file, ".csv")
+        validateFileExt(html_file, ".html")
+
+        return csv_file, html_file
+
+    except IndexError:
+        raise NameError(usage)
+    except (FileNotFoundError, ValueError) as e:
+        raise RuntimeError(f"Error: {e}")
+
+
 def main(openFile=True):
     """
     The main function of the CSV to HTML converter.
@@ -90,26 +133,7 @@ def main(openFile=True):
         open_file (bool, optional): Whether to automatically open the generated HTML file. Defaults to True.
     """
 
-    usage = "Usage: python3 <main.py> <CSV_FILE> <HTML_FILE>"
-
-    try:
-        csv_file = sys.argv[1]
-        html_file = sys.argv[2]
-    except IndexError as e:
-        raise IndexError(usage)
-
-    if len(sys.argv) != 3:
-        raise UsageError(usage)
-
-    if ".csv" not in csv_file:
-        print('Missing ".csv" file extension from first command-line argument!')
-        print("Exiting program...")
-        sys.exit(1)
-
-    if ".html" not in html_file:
-        print('Missing ".html" file extension from second command-line argument!')
-        print("Exiting program...")
-        sys.exit(1)
+    csv_file, html_file = handle_command_line_args()
 
     table_headers = create_table_headers(parse_csv_data(csv_file)[0])
     table_body = create_table_body(parse_csv_data(csv_file)[1])
@@ -123,38 +147,38 @@ def main(openFile=True):
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title> Table </title>
+        <title> {0} </title>
         <style>
-            h1 {
+            h1 {{
                 /* text-align: center; */
                 font-weight: 500;
-            }
+            }}
 
-            table {
+            table {{
                 width: 100%;
                 border: 0.5px solid salmon;
                 vertical-align: bottom;
-            }
+            }}
 
             th,
-            td {
+            td {{
                 padding: 5px 5px;
-            }
+            }}
 
-            table th {
+            table th {{
                 background-color: #d79797;
                 text-align: center;
                 min-width: 100px;
                 height: 35px;
-            }
+            }}
 
-            table td {
+            table td {{
                 background-color: rgb(227, 204, 204);
                 text-align: center;
-            }
+            }}
         </style>
     </head>
-    """
+    """.format(name)
 
     html_body = """
     <body>
