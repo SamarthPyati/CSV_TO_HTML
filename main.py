@@ -22,22 +22,23 @@ def parse_csv_data(file:str):
     if not os.path.exists(file):
         raise OSError(f"{file} doesn`t exists!")
 
-    data = []                                                                       # list of list containing table content
+    data = []                                                                      # list of list containing table content
     with open(file, "r", newline="") as f:
         reader = csv.reader(f)
         for i, rows in enumerate(reader):
-            if i != 0:
-                rows = [i.strip() for i in rows]
-                data.append(rows)
-    return data
+            if i == 0:
+                headers = [k.strip() for k in rows]
+            else:
+                data.append([k.strip() for k in rows])
+    return headers, data
 
 
 def create_table_headers(headers: list):
     result = ""
-    result += "<tr>"
+    result += "<tr>\n"
     for i in headers:
         result += f"<th>{i}</th>\n"
-    result += "</tr>"
+    result += "</tr>\n"
     return result
 
 
@@ -54,6 +55,7 @@ def create_table_body(table_content:list) -> str:
 def writeToHtml(file:str, html_content:str):
     with open(file, "w") as htmlFile:
         htmlFile.write(html_content)
+
 
 def main(openFile=True):
     usage = "Usage: python3 <main.py> <CSV_FILE> <HTML_FILE>"
@@ -77,8 +79,8 @@ def main(openFile=True):
         print("Exiting program...")
         sys.exit(1)
 
-    table_headers = create_table_headers(parse_csv_headers(csv_file))
-    table_body = create_table_body(parse_csv_data(csv_file))
+    table_headers = create_table_headers(parse_csv_data(csv_file)[0])
+    table_body = create_table_body(parse_csv_data(csv_file)[1])
 
     name, ext = os.path.splitext(csv_file)
 
@@ -142,7 +144,11 @@ def main(openFile=True):
             print("Error Opening File: ", e)
 
 
+# def _mainTemp():
+#     print(create_table_body(parse_csv_data("nba.csv")[1]))
+
 if __name__ == "__main__":
     main()
+
 
 
