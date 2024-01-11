@@ -55,9 +55,7 @@ def writeToHtml(file:str, html_content:str):
     with open(file, "w") as htmlFile:
         htmlFile.write(html_content)
 
-
-if __name__ == "__main__":
-
+def main(openFile=True):
     usage = "Usage: python3 <main.py> <CSV_FILE> <HTML_FILE>"
 
     try:
@@ -65,16 +63,26 @@ if __name__ == "__main__":
         html_file = sys.argv[2]
     except IndexError as e:
         raise IndexError(usage)
-    
+
     if len(sys.argv) != 3:
         raise UsageError(usage)
+
+    if ".csv" not in csv_file:
+        print('Missing ".csv" file extension from first command-line argument!')
+        print("Exiting program...")
+        sys.exit(1)
+
+    if ".html" not in html_file:
+        print('Missing ".html" file extension from second command-line argument!')
+        print("Exiting program...")
+        sys.exit(1)
 
     table_headers = create_table_headers(parse_csv_headers(csv_file))
     table_body = create_table_body(parse_csv_data(csv_file))
 
     name, ext = os.path.splitext(csv_file)
 
-    # Html content 
+    # Html content
     html_head = """
     <!DOCTYPE html>
     <html lang="en">
@@ -111,7 +119,7 @@ if __name__ == "__main__":
                 text-align: center;
             }
         </style>
-    </head> 
+    </head>
     """
 
     html_body = """
@@ -127,4 +135,14 @@ if __name__ == "__main__":
 
     writeToHtml(html_file, html_content)                                         # writing that html code
 
-    result = subprocess.run(["open {}".format(html_file)], shell=True)           # opening the code
+    if openFile:
+        try:
+            result = subprocess.run(["open {}".format(html_file)], shell=True)           # opening the code
+        except Exception as e:
+            print("Error Opening File: ", e)
+
+
+if __name__ == "__main__":
+    main()
+
+
