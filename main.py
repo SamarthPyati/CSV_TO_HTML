@@ -4,21 +4,21 @@ import os
 import subprocess
 
 # Functions
-def parse_csv_headers(file: str, _dict:bool=False):
-    if not os.path.exists(file):
-        raise OSError(f"{file} doesn`t exists!")
+def parse_csv_data(file:str) -> tuple[list[str], list[list[str]]]:
+    """
+    Parses CSV data from the given file.
 
-    with open(file, "r", newline="") as f:
-        reader = csv.DictReader(f) if _dict else csv.reader(f)
-        
-        for i, rows in enumerate(reader):                                           # making a list of headers
-            if i == 0:
-                headers = [i.strip() for i in rows]                                 # stripping the whitespace
+    Args:
+        file (str): The path to the CSV file.
 
-    return headers
+    Returns:
+        tuple[list[str], list[list[str]]]: A tuple containing:
+            - The headers of the CSV file as a list of strings.
+            - The data of the CSV file as a list of lists of strings.
 
-
-def parse_csv_data(file:str):
+    Raises:
+        OSError: If the file does not exist.
+    """
     if not os.path.exists(file):
         raise OSError(f"{file} doesn`t exists!")
 
@@ -33,7 +33,16 @@ def parse_csv_data(file:str):
     return headers, data
 
 
-def create_table_headers(headers: list):
+def create_table_headers(headers: list) -> str:
+    """
+    Creates the HTML table headers from the given list of headers.
+
+    Args:
+        headers (list): A list of header strings.
+
+    Returns:
+        str: The HTML table headers as a string.
+    """
     result = ""
     result += "<tr>\n"
     for i in headers:
@@ -43,6 +52,15 @@ def create_table_headers(headers: list):
 
 
 def create_table_body(table_content:list) -> str:
+    """
+    Creates the HTML table body from the given list of table content.
+
+    Args:
+        table_content (list): A list of lists representing table rows.
+
+    Returns:
+        str: The HTML table body as a string.
+    """
     result = ""
     for row in table_content:   
         result += "<tr>\n"
@@ -52,12 +70,26 @@ def create_table_body(table_content:list) -> str:
     return result
     
 
-def writeToHtml(file:str, html_content:str):
+def writeToHtml(file:str, html_content:str) -> None:
+    """
+    Writes to a html file
+    
+    Args:
+        file(str): Path to the html File.
+        html_content(str): HTML content to write to the file.
+    """
     with open(file, "w") as htmlFile:
         htmlFile.write(html_content)
 
 
 def main(openFile=True):
+    """
+    The main function of the CSV to HTML converter.
+
+    Args:
+        open_file (bool, optional): Whether to automatically open the generated HTML file. Defaults to True.
+    """
+
     usage = "Usage: python3 <main.py> <CSV_FILE> <HTML_FILE>"
 
     try:
@@ -133,9 +165,9 @@ def main(openFile=True):
     </body>
     </html>
     """.format(table_headers, table_body)
-    html_content = html_head + html_body                                         # concating the final html code
+    html_content = html_head + html_body                                                 # concating the final html code
 
-    writeToHtml(html_file, html_content)                                         # writing that html code
+    writeToHtml(html_file, html_content)                                                 # writing that html code
 
     if openFile:
         try:
@@ -144,8 +176,9 @@ def main(openFile=True):
             print("Error Opening File: ", e)
 
 
-# def _mainTemp():
-#     print(create_table_body(parse_csv_data("nba.csv")[1]))
+def _mainTemp():
+    ''' Temporary main function '''
+    print(create_table_body(parse_csv_data("nba.csv")[1]))
 
 if __name__ == "__main__":
     main()
