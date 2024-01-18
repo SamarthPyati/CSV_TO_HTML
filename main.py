@@ -1,3 +1,4 @@
+#!/opt/homebrew/bin/python3
 import sys
 import csv
 import os 
@@ -125,7 +126,7 @@ def handle_command_line_args() -> tuple[str, str]:
         raise RuntimeError(f"Error: {e}")
 
 
-def main(openFile=True):
+def main(openFile=True, collapseTableBorders=False):
     """
     The main function of the CSV to HTML converter.
 
@@ -139,6 +140,7 @@ def main(openFile=True):
     table_body = create_table_body(parse_csv_data(csv_file)[1])
 
     name, ext = os.path.splitext(csv_file)
+    borderCollapse = "collapse" if collapseTableBorders else ""
 
     # Html content
     html_head = """
@@ -150,42 +152,48 @@ def main(openFile=True):
         <title> {0} </title>
         <style>
             header h1 {{
-                font-weight: 500;
-                text-align: center;
-                color: indianred;
-            }}
+            font-weight: 500;
+            text-align: center;
+            color: indianred;
+        }}
 
-            table {{
-                width: 100%;
-                border: 0.5px solid salmon;
-                vertical-align: bottom;
-            }}
+        table {{
+            width: 100%;
+            border: 0.5px solid salmon;
+            vertical-align: bottom;
+            border-collapse: {1};
+        }}
 
-            th,
-            td {{
-                padding: 5px 5px;
-            }}
+        th,
+        td {{
+            padding: 5px 5px;
+        }}
 
-            table th {{
-                background-color: #d79797;
-                text-align: center;
-                min-width: 100px;
-                height: 35px;
-            }}
+        table th {{
+            background-color: #d79797;
+            text-align: center;
+            min-width: 100px;
+            height: 35px;
+        }}
 
-            table td {{
-                background-color: rgb(227, 204, 204);
-                text-align: center;
-            }}
+        table td {{
+            background-color: rgb(227, 204, 204);
+            text-align: center;
+        }}
 
-            hr {{
-                width: 97%;
-                color: indianred;
-                padding: 0px 10px;
-            }}
+        table tr:hover td {{
+            background-color: rgba(248, 127, 114, 0.307);
+            transition: 0.2s ease-in-out;
+        }}
+
+        hr {{
+            width: 97%;
+            color: indianred;
+            padding: 0px 10px;
+        }}
         </style>
     </head>
-    """.format(name)
+    """.format(name, borderCollapse)
 
     html_body = """
     <header>
