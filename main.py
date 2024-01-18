@@ -149,9 +149,10 @@ def main(openFile=True):
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title> {0} </title>
         <style>
-            h1 {{
-                /* text-align: center; */
+            header h1 {{
                 font-weight: 500;
+                text-align: center;
+                color: indianred;
             }}
 
             table {{
@@ -176,26 +177,38 @@ def main(openFile=True):
                 background-color: rgb(227, 204, 204);
                 text-align: center;
             }}
+
+            hr {{
+                width: 97%;
+                color: indianred;
+                padding: 0px 10px;
+            }}
         </style>
     </head>
     """.format(name)
 
     html_body = """
+    <header>
+        <h1><b><u>{0}</u></b></h1>
+    </header>
+
+    <hr>
     <body>
         <table>
-            {0}
             {1}
+            {2}
         </table>
+    <hr>
     </body>
     </html>
-    """.format(table_headers, table_body)
-    html_content = html_head + html_body                                                 # concating the final html code
+    """.format(name,table_headers, table_body)
+    html_content = html_head + html_body                                                 # concatenating the final html code
 
-    writeToHtml(html_file, html_content)                                                 # writing that html code
+    writeToHtml(html_file, html_content)                                                 # writing the html code
 
     if openFile:
         try:
-            result = subprocess.run(["open {}".format(html_file)], shell=True)           # opening the code
+            result = subprocess.run(["open {}".format(html_file)], shell=True)           # open the html file in a browser
         except Exception as e:
             print("Error Opening File: ", e)
 
