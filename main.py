@@ -1,4 +1,3 @@
-#!/opt/homebrew/bin/python3
 import sys
 import csv
 import os 
@@ -85,13 +84,13 @@ def writeToHtml(file:str, html_content:str) -> None:
 
 def validateFileExistence(file:str) -> None:
     if not os.path.exists(file):
-        raise FileNotFoundError(f"{file} was not found.")
+        raise FileNotFoundError(f"{file} was not found.") 
 
 
 def validateFileExt(file: str, expected_extension: str) -> None:
     _, actual_extension = os.path.splitext(file)
     if actual_extension != expected_extension:
-        raise ValueError(f"ExtensionError: File should have the extension {expected_extension}.")
+        raise ValueError(f"ExtensionError: File should have the extension {expected_extension}.") 
 
 
 def handle_command_line_args() -> tuple[str, str]:
@@ -102,7 +101,7 @@ def handle_command_line_args() -> tuple[str, str]:
         tuple[str, str]: A tuple containing the CSV file path and HTML file path.
 
     Raises:
-        NameError: If there is an issue with command-line arguments.
+        NameError: If there are not enough command-line arguments.
         RuntimeError: If there is an issue with file existence or extension validation.
     """
     usage = "Usage: python3 main.py <CSV_FILE> <HTML_FILE>"
@@ -111,9 +110,6 @@ def handle_command_line_args() -> tuple[str, str]:
         csv_file = sys.argv[1]
         html_file = sys.argv[2]
 
-        if len(sys.argv) != 3:
-            raise UsageError(usage)
-
         validateFileExistence(csv_file)
         validateFileExt(csv_file, ".csv")
         validateFileExt(html_file, ".html")
@@ -121,9 +117,10 @@ def handle_command_line_args() -> tuple[str, str]:
         return csv_file, html_file
 
     except IndexError:
-        raise NameError(usage)
+        raise NameError("Not enough arguments. " + usage) from None                     # supressing the traceback default error
     except (FileNotFoundError, ValueError) as e:
-        raise RuntimeError(f"Error: {e}")
+        raise RuntimeError(f"Error: {e}") 
+        
 
 
 def main(openFile=True, collapseTableBorders=False):
