@@ -6,10 +6,7 @@ Converts CSV files to HTML tables with customizable styling.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Command Line Arguments](#command-line-arguments)
-- [Styling Options](#styling-options)
 - [Examples](#examples)
-- [License](#license)
-
 
 ## Prerequisites
 Make sure you have the following installed on your system:
