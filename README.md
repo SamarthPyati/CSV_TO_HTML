@@ -19,15 +19,15 @@ Make sure you have the following installed on your system:
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-username/csv-to-html-converter.git
-cd csv-to-html-converter
+git clone https://github.com/SamarthPyati/CSV_TO_HTML
+cd CSV_TO_HTML
 ```
 
 ## Usage
 
 Run the main script with the following command:
 ```bash
-python main.py <CSV_FILE> <HTML_FILE>
+python3 main.py <CSV_FILE> <HTML_FILE>
 ```
 
 ### Command Line Arguments
@@ -40,5 +40,5 @@ python main.py <CSV_FILE> <HTML_FILE>
 Convert a CSV file to HTML:
 
 ```bash
-python main.py input.csv output.html
+python3 main.py input.csv output.html
 ```
