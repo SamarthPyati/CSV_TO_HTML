@@ -12,6 +12,9 @@ Converts CSV files to HTML tables with customizable styling.
 Make sure you have the following installed on your system:
 - Python 3
 
+> [NOTE!]
+> This program specifically works only on UNIX based systems (Linux, MacOS)
+
 ## Installation
 Clone the repository:
 
